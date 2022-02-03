@@ -130,10 +130,14 @@ union' p1 p2 update = do
   point2@(Pt link_ref2) <- repr p2
   -- The precondition ensures that we don't create cyclic structures.
   when (point1 /= point2) $ do
-    Info info_ref1 <- readSTRef link_ref1
-    Info info_ref2 <- readSTRef link_ref2
-    MkInfo w1 d1 <- readSTRef info_ref1 -- d1 is discarded
-    MkInfo w2 d2 <- readSTRef info_ref2
+    ir1 <- readSTRef link_ref1
+    let Info info_ref1 = ir1
+    ir2 <- readSTRef link_ref2
+    let Info info_ref2 = ir2
+    i1 <- readSTRef info_ref1 -- d1 is discarded
+    let MkInfo w1 d1 = i1
+    i2 <- readSTRef info_ref2
+    let MkInfo w2 d2 = i2
     d2' <- update d1 d2
     -- Make the smaller tree a a subtree of the bigger one.  The idea
     -- is this: We increase the path length of one set by one.
